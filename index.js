@@ -28,7 +28,7 @@ function readIPsFromFile(filePath) {
 
 // Function to run nmap, parse its output, and update metrics
 async function updateMetrics() {
-  const ipsToScan = await readIPsFromFile('ips.txt'); // or 'ips.csv' for CSV file
+  const ipsToScan = await readIPsFromFile('hosts.txt');
 
   ipsToScan.forEach(ip => {
     exec(`nmap -sS -Pn -p- --open ${ip}`, (error, stdout, stderr) => {

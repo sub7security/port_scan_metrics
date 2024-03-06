@@ -37,12 +37,13 @@ async function updateMetrics() {
   const ipsToScan = await readIPsFromFile('hosts.txt');
 
   ipsToScan.forEach(ip => {
+    console.log("Starting scan",ip);
     exec(`nmap -sS -Pn -p- --open ${ip}`, (error, stdout, stderr) => {
       if (error) {
         console.error(`exec error: ${error}`);
         return;
       }
-
+      console.log("Scan done",ip);
       // Parse nmap output to count open ports
       const openPortsCount = (stdout.match(/open/g) || []).length;
 

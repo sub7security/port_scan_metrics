@@ -61,5 +61,21 @@ app.get('/metrics', async (req, res) => {
 const port = 9910;
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
-  updateMetrics(); // Initially populate the metrics
+
+  // Initially populate the metrics
+  updateMetrics().then(() => {
+    console.log('Initial metrics update completed.');
+  }).catch(err => {
+    console.error('Error during initial metrics update:', err);
+  });
+
+  // Schedule updateMetrics to run once a day
+  setInterval(() => {
+    updateMetrics().then(() => {
+      console.log('Scheduled metrics update completed.');
+    }).catch(err => {
+      console.error('Error during scheduled metrics update:', err);
+    });
+  }, 24 * 60 * 60 * 1000); // 24 hours * 60 minutes * 60 seconds * 1000 milliseconds
 });
+

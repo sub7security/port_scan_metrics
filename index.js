@@ -15,6 +15,13 @@ const openPortsCountGauge = new promClient.Gauge({
   registers: [register],
 });
 
+const openPortsList = new promClient.Gauge({
+  name: 'nmap_open_ports_list',
+  help: 'List of open ports found by nmap for an IP, represented as a comma-separated string',
+  labelNames: ['ip', 'open_ports'],
+  registers: [register],
+});
+
 // Function to read IPs from a TXT or CSV file
 function readIPsFromFile(filePath) {
   return new Promise((resolve, reject) => {
@@ -44,11 +51,25 @@ async function updateMetrics() {
         return;
       }
       console.log("Scan done",ip);
+      
       // Parse nmap output to count open ports
       const openPortsCount = (stdout.match(/open/g) || []).length;
 
       // Update the gauge for this IP with the count of open ports
       openPortsCountGauge.labels(ip).set(openPortsCount);
+      
+      // Example parsing logic (adjust according to your actual output parsing)
+      const openPorts = stdout.split('\n')
+        .filter(line => line.includes('/open'))
+        .map(line => line.match(/\d+/)[0]) // Extract the port number
+        .join(',');
+
+      if (openPorts) {
+        openPortsList.labels(ip, openPorts).set(1); // Use '1' as a placeholder value
+      } else {
+        openPortsList.labels(ip, 'None').set(1); // Indicate no open ports
+      }
+
     });
   });
     // After all scans are initiated (but not necessarily completed)

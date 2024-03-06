@@ -26,6 +26,13 @@ function readIPsFromFile(filePath) {
   });
 }
 
+// Define a Gauge for the last scan timestamp
+const lastScanTimestamp = new promClient.Gauge({
+  name: 'last_scan_timestamp',
+  help: 'UNIX timestamp when the last nmap scan was completed',
+  registers: [register],
+});
+
 // Function to run nmap, parse its output, and update metrics
 async function updateMetrics() {
   const ipsToScan = await readIPsFromFile('hosts.txt');
@@ -44,6 +51,9 @@ async function updateMetrics() {
       openPortsCountGauge.labels(ip).set(openPortsCount);
     });
   });
+    // After all scans are initiated (but not necessarily completed)
+  // Update the timestamp. For precise timing, you may need to adjust this placement based on your logic
+  lastScanTimestamp.set(Date.now());
 }
 
 // Metrics endpoint

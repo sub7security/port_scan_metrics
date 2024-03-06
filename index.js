@@ -6,7 +6,6 @@ const promClient = require('prom-client');
 const app = express();
 
 const register = new promClient.Registry();
-promClient.collectDefaultMetrics({ register });
 
 // Define a custom metric for the count of open ports per IP
 const openPortsCountGauge = new promClient.Gauge({

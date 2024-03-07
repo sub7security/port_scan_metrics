@@ -65,9 +65,9 @@ async function updateMetrics() {
         .join(',');
 
       if (openPorts) {
-        openPortsList.labels(ip, openPorts).set(1); // Use '1' as a placeholder value
+        openPortsList.labels(ip).set(openPorts); // Use '1' as a placeholder value
       } else {
-        openPortsList.labels(ip, 'None').set(1); // Indicate no open ports
+        openPortsList.labels(ip).set('None'); // Indicate no open ports
       }
 
     });

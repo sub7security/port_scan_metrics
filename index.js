@@ -107,6 +107,6 @@ app.listen(port, () => {
     }).catch(err => {
       console.error('Error during scheduled metrics update:', err);
     });
-  }, 24 * 60 * 60 * 1000); // 24 hours * 60 minutes * 60 seconds * 1000 milliseconds
+  }, 6 * 60 * 60 * 1000); // 24 hours * 60 minutes * 60 seconds * 1000 milliseconds
 });
 
